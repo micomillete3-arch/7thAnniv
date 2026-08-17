@@ -1,0 +1,1734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Our 7th Anniversary | Mahal</title>
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=playfair-display:600,700|instrument-sans:400,500,600,700" rel="stylesheet" />
+    <style>
+        :root {
+            --ink: #331f2a;
+            --muted: #735766;
+            --rose: #b82d5b;
+            --coral: #f06b64;
+            --blush: #fff1f4;
+            --petal: #ffd9df;
+            --cream: #fffaf6;
+            --mint: #dff3ec;
+            --gold: #d49a3a;
+            --lavender: #eee5f6;
+            --lilac: #d7c1e8;
+            --plum: #64406f;
+            --shadow: 0 24px 70px rgba(119, 42, 76, .18);
+        }
+
+        * { box-sizing: border-box; }
+
+        html {
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        img { max-width: 100%; }
+
+        body {
+            margin: 0;
+            font-family: 'Instrument Sans', system-ui, sans-serif;
+            color: var(--ink);
+            background:
+                repeating-linear-gradient(0deg, rgba(83, 55, 99, .028) 0, rgba(83, 55, 99, .028) 1px, transparent 1px, transparent 5px),
+                repeating-linear-gradient(90deg, rgba(83, 55, 99, .02) 0, rgba(83, 55, 99, .02) 1px, transparent 1px, transparent 7px),
+                linear-gradient(115deg, #fff8f4 0 25%, #eee4f6 25% 58%, #dcd0eb 58% 76%, #edf6f0 76% 100%);
+            background-attachment: fixed;
+            transition: background-color .8s ease;
+        }
+
+        body.envelope-mode { background-color: #1f131f; }
+
+        button { font: inherit; }
+
+        .page {
+            position: relative;
+            overflow: hidden;
+            isolation: isolate;
+        }
+
+        .page::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: -2;
+            pointer-events: none;
+            background:
+                repeating-linear-gradient(135deg, transparent 0, transparent 42px, rgba(100, 64, 111, .05) 42px, rgba(100, 64, 111, .05) 44px),
+                linear-gradient(180deg, rgba(255, 255, 255, .4), transparent 22%, rgba(245, 237, 251, .45) 58%, transparent 82%);
+            transition: background .8s ease;
+        }
+
+        body.envelope-mode .page::before {
+            background:
+                repeating-linear-gradient(135deg, transparent 0, transparent 42px, rgba(215, 193, 232, .045) 42px, rgba(215, 193, 232, .045) 44px),
+                linear-gradient(180deg, rgba(30, 18, 31, .96), rgba(56, 31, 57, .94) 50%, rgba(25, 16, 27, .98));
+        }
+
+        .page::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: clamp(1rem, 5vw, 6rem);
+            z-index: -1;
+            width: 2px;
+            height: 100%;
+            background: rgba(184, 45, 91, .11);
+            box-shadow: 10px 0 0 rgba(212, 154, 58, .08), -10px 0 0 rgba(77, 138, 122, .08);
+            pointer-events: none;
+        }
+        body.locked { overflow: hidden; }
+
+        .passcode-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: grid;
+            place-items: center;
+            padding: 1.5rem;
+            background:
+                repeating-linear-gradient(45deg, transparent 0, transparent 26px, rgba(100, 64, 111, .07) 26px, rgba(100, 64, 111, .07) 28px),
+                repeating-linear-gradient(-45deg, transparent 0, transparent 26px, rgba(184, 45, 91, .04) 26px, rgba(184, 45, 91, .04) 28px),
+                linear-gradient(135deg, #fff9f5 0 32%, #eee3f6 32% 72%, #d9c7e8 72%);
+            transition: opacity .5s ease, visibility .5s ease;
+            overflow-y: auto;
+        }
+
+        .passcode-screen.unlocked {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .passcode-card {
+            width: min(380px, 100%);
+            padding: 1.5rem;
+            border-radius: 8px;
+            background:
+                linear-gradient(rgba(255, 253, 249, .94), rgba(255, 248, 247, .94)),
+                repeating-linear-gradient(0deg, transparent 0, transparent 23px, rgba(184, 45, 91, .06) 23px, rgba(184, 45, 91, .06) 24px);
+            border: 1px solid rgba(184, 45, 91, .14);
+            outline: 6px solid rgba(255, 255, 255, .42);
+            outline-offset: 7px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            position: relative;
+        }
+
+        .passcode-card.shake {
+            animation: tinyShake .35s ease;
+        }
+
+        .passcode-card h2 {
+            margin: .7rem 0 .5rem;
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2.4rem;
+            line-height: 1;
+            letter-spacing: 0;
+        }
+
+        .passcode-card p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .passcode-dots {
+            display: flex;
+            justify-content: center;
+            gap: .6rem;
+            margin: 1.35rem 0;
+        }
+
+        .passcode-dots span {
+            width: .85rem;
+            height: .85rem;
+            border-radius: 50%;
+            border: 2px solid rgba(184, 45, 91, .35);
+            background: white;
+        }
+
+        .passcode-dots span.filled { background: var(--rose); border-color: var(--rose); }
+
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: .7rem;
+        }
+
+        .keypad button {
+            min-height: 3.4rem;
+            border: 0;
+            border-radius: 8px;
+            background: white;
+            color: var(--ink);
+            cursor: pointer;
+            font-size: 1.25rem;
+            font-weight: 900;
+            box-shadow: 0 10px 22px rgba(51, 31, 42, .1);
+            transition: transform .16s ease, background .16s ease;
+        }
+
+        .keypad button:hover { transform: translateY(-2px); background: var(--blush); }
+        .keypad .soft-key { color: var(--rose); font-size: .92rem; }
+
+        .passcode-error {
+            min-height: 1.4rem;
+            margin-top: 1rem;
+            color: var(--rose);
+            font-weight: 800;
+        }
+
+        .angry-cute {
+            position: absolute;
+            left: 50%;
+            top: -3.1rem;
+            transform: translateX(-50%) translateY(.7rem) scale(.92);
+            display: flex;
+            align-items: center;
+            gap: .55rem;
+            width: max-content;
+            max-width: min(330px, calc(100vw - 3rem));
+            padding: .75rem .9rem;
+            border-radius: 999px;
+            background: var(--ink);
+            color: white;
+            box-shadow: 0 16px 36px rgba(51, 31, 42, .22);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .angry-cute.show {
+            animation: angryPop 1.45s ease forwards;
+        }
+
+        .angry-face {
+            display: grid;
+            place-items: center;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            background: var(--petal);
+            color: var(--rose);
+            font-weight: 900;
+            flex: 0 0 auto;
+        }
+
+        .angry-cute strong {
+            display: block;
+            font-size: .9rem;
+            line-height: 1.2;
+        }
+
+        .hero {
+            position: relative;
+            min-height: 92vh;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(320px, 520px);
+            gap: 3rem;
+            align-items: center;
+            width: min(1180px, calc(100% - 40px));
+            margin: 0 auto;
+            padding: 3rem 0 2rem;
+            max-height: 1800px;
+            opacity: 1;
+            transform: scale(1);
+            filter: blur(0);
+            transform-origin: center 70%;
+            transition: opacity .55s ease, transform .7s cubic-bezier(.2, .8, .2, 1), filter .55s ease, min-height .75s ease, max-height .75s ease, padding .75s ease;
+        }
+
+        body.envelope-mode .hero {
+            min-height: 0;
+            max-height: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            overflow: hidden;
+            opacity: 0;
+            transform: scale(1.14) translateY(-5%);
+            filter: blur(12px);
+            pointer-events: none;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 2rem -2rem;
+            z-index: -1;
+            border-top: 1px solid rgba(184, 45, 91, .13);
+            border-bottom: 1px solid rgba(77, 138, 122, .13);
+            background:
+                repeating-linear-gradient(90deg, transparent 0, transparent 79px, rgba(255, 255, 255, .32) 79px, rgba(255, 255, 255, .32) 80px),
+                linear-gradient(100deg, rgba(255, 255, 255, .46), rgba(230, 216, 241, .58) 52%, rgba(229, 244, 237, .42));
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 7%;
+            left: -1.5rem;
+            z-index: -1;
+            width: 90px;
+            height: 180px;
+            border-left: 3px solid rgba(77, 138, 122, .32);
+            border-top: 3px solid rgba(184, 45, 91, .22);
+            transform: skewY(-16deg);
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            padding: .55rem .85rem;
+            border: 1px solid rgba(184, 45, 91, .22);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .68);
+            color: var(--rose);
+            font-size: .86rem;
+            font-weight: 700;
+        }
+
+        .heart-dot {
+            width: .65rem;
+            height: .65rem;
+            background: var(--coral);
+            transform: rotate(45deg);
+            position: relative;
+        }
+
+        .heart-dot::before,
+        .heart-dot::after {
+            content: '';
+            position: absolute;
+            width: .65rem;
+            height: .65rem;
+            border-radius: 50%;
+            background: var(--coral);
+        }
+
+        .heart-dot::before { left: -.32rem; }
+        .heart-dot::after { top: -.32rem; }
+
+        h1 {
+            margin: 1.15rem 0 1rem;
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: clamp(3rem, 8vw, 7.4rem);
+            line-height: .92;
+            letter-spacing: 0;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .9rem;
+            margin-top: 1.8rem;
+        }
+
+        .music-player {
+            display: none;
+            align-items: center;
+            gap: .95rem;
+            width: min(430px, 100%);
+            margin-top: 1.4rem;
+            padding: .85rem;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, .78);
+            border: 1px solid rgba(184, 45, 91, .13);
+            box-shadow: 0 14px 34px rgba(51, 31, 42, .1);
+        }
+
+        .music-player.visible {
+            display: flex;
+        }
+
+        .cd {
+            position: relative;
+            display: grid;
+            place-items: center;
+            width: 4.4rem;
+            height: 4.4rem;
+            border-radius: 50%;
+            flex: 0 0 auto;
+            background:
+                radial-gradient(circle, #fff 0 12%, #331f2a 13% 18%, transparent 19%),
+                conic-gradient(from 30deg, #ffd9df, #fffaf6, #dff3ec, #f06b64, #ffd9df);
+            box-shadow: inset 0 0 0 5px rgba(255, 255, 255, .55), 0 10px 24px rgba(51, 31, 42, .16);
+        }
+
+        .music-player.playing .cd {
+            animation: spinCd 4s linear infinite;
+        }
+
+        .cd::after {
+            content: '';
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid var(--ink);
+        }
+
+        .track-info {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .track-info strong,
+        .track-info span {
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .track-info strong { font-size: .98rem; }
+        .track-info span { color: var(--muted); font-size: .88rem; margin-top: .12rem; }
+
+        .music-toggle {
+            width: 2.9rem;
+            height: 2.9rem;
+            border: 0;
+            border-radius: 50%;
+            background: var(--rose);
+            color: white;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 900;
+            flex: 0 0 auto;
+            box-shadow: 0 12px 26px rgba(184, 45, 91, .22);
+        }
+
+        .music-note {
+            display: none;
+            margin-top: .6rem;
+            color: var(--rose);
+            font-size: .9rem;
+            font-weight: 800;
+        }
+
+        .music-note.show { display: block; }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: .55rem;
+            border: 0;
+            border-radius: 999px;
+            padding: .95rem 1.25rem;
+            cursor: pointer;
+            font-weight: 800;
+            box-shadow: 0 14px 34px rgba(184, 45, 91, .18);
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+
+        .button:hover { transform: translateY(-2px); box-shadow: 0 18px 40px rgba(184, 45, 91, .23); }
+        .button.primary { background: var(--rose); color: white; }
+        .button.secondary { background: white; color: var(--rose); border: 1px solid rgba(184, 45, 91, .15); }
+
+        .photo-stack {
+            position: relative;
+            min-height: 620px;
+        }
+
+        .photo {
+            position: absolute;
+            overflow: hidden;
+            border: 10px solid white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            background: white;
+        }
+
+        .photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo.main { inset: 3rem 1rem 5rem 3rem; transform: rotate(2deg); }
+        .photo.small-a { width: 47%; height: 36%; left: 0; bottom: 1rem; transform: rotate(-7deg); }
+
+        .floating-note {
+            position: absolute;
+            right: 1.4rem;
+            bottom: 1.2rem;
+            width: min(280px, 64%);
+            padding: 1rem;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, .9);
+            box-shadow: 0 16px 40px rgba(51, 31, 42, .14);
+            font-weight: 700;
+            line-height: 1.45;
+        }
+
+        section {
+            width: min(1080px, calc(100% - 40px));
+            margin: 0 auto;
+            padding: 4.5rem 0;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: clamp(2.2rem, 5vw, 4.6rem);
+            line-height: 1;
+            margin: 0 0 1.5rem;
+        }
+
+        .letter {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 7rem;
+            transition: padding .75s ease;
+        }
+
+        body.envelope-mode .letter { padding-top: 1.25rem; }
+
+        .letter::before {
+            content: '';
+            position: absolute;
+            inset: 2rem -4rem 0;
+            z-index: -1;
+            border: 1px solid rgba(142, 20, 41, .11);
+            background:
+                repeating-linear-gradient(135deg, rgba(100, 64, 111, .055) 0, rgba(100, 64, 111, .055) 2px, transparent 2px, transparent 18px),
+                linear-gradient(180deg, rgba(255, 249, 245, .52), rgba(226, 211, 240, .48));
+            box-shadow: 0 30px 80px rgba(92, 35, 54, .08);
+        }
+
+        .message,
+        .memory,
+        .promise,
+        .secret-box {
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        .message {
+            order: 1;
+            position: relative;
+            z-index: 2;
+            width: min(760px, calc(100% - 28px));
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(190px) scale(.92);
+            background: #fffaf1;
+            padding: 0 clamp(1.4rem, 4vw, 3rem);
+            border: 1px solid rgba(184, 45, 91, .12);
+            margin-bottom: -1rem;
+            box-shadow: 0 24px 65px rgba(83, 18, 29, .2);
+            transition: max-height 1.1s ease, opacity .45s ease, transform .9s cubic-bezier(.2, .8, .2, 1), margin .9s ease;
+        }
+
+        .letter.open .message {
+            max-height: 1800px;
+            opacity: 1;
+            transform: translateY(45px) scale(1);
+            margin-bottom: 4.5rem;
+            padding: clamp(1.4rem, 4vw, 3rem);
+        }
+
+        .message::before {
+            content: '';
+            position: absolute;
+            inset: 14px;
+            border: 1px solid rgba(184, 45, 91, .18);
+            pointer-events: none;
+        }
+
+        .message p {
+            margin: 0 0 1.15rem;
+            color: #5d4351;
+            line-height: 1.9;
+            font-size: 1.04rem;
+        }
+
+        .envelope-wrap {
+            order: 2;
+            position: relative;
+            z-index: 3;
+            width: min(520px, calc(100% - 28px));
+            height: 320px;
+            cursor: pointer;
+            perspective: 1000px;
+            transition: width .75s ease, height .8s cubic-bezier(.2, .8, .2, 1), background .45s ease, box-shadow .45s ease;
+        }
+
+        .letter.open .envelope-wrap {
+            width: min(420px, calc(100% - 40px));
+            height: 72px;
+            overflow: hidden;
+            border-radius: 0 0 8px 8px;
+            background: #9d1832;
+            box-shadow: 0 16px 32px rgba(90, 10, 24, .24);
+        }
+
+        .letter.open .envelope-wrap::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 8;
+            background: #b72240;
+            clip-path: polygon(0 0, 50% 72%, 100% 0, 100% 100%, 0 100%);
+            pointer-events: none;
+        }
+
+        .envelope-wrap:focus-visible {
+            outline: 4px solid rgba(184, 45, 91, .28);
+            outline-offset: 8px;
+        }
+
+        .envelope {
+            position: absolute;
+            inset: 0;
+            filter: drop-shadow(0 24px 30px rgba(90, 10, 24, .27));
+            transition: opacity .25s ease;
+        }
+
+        .letter.open .envelope { opacity: 0; }
+
+        .envelope-back {
+            position: absolute;
+            inset: 0;
+            border-radius: 8px;
+            background: #8f1429;
+        }
+
+        .envelope-front {
+            position: absolute;
+            z-index: 4;
+            inset: 0;
+            overflow: hidden;
+            border-radius: 0 0 8px 8px;
+        }
+
+        .envelope-front::before,
+        .envelope-front::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            width: 70%;
+            height: 100%;
+            background: #b21f3b;
+        }
+
+        .envelope-front::before {
+            left: 0;
+            clip-path: polygon(0 0, 100% 100%, 0 100%);
+        }
+
+        .envelope-front::after {
+            right: 0;
+            clip-path: polygon(100% 0, 100% 100%, 0 100%);
+            background: #a71934;
+        }
+
+        .envelope-flap {
+            position: absolute;
+            z-index: 5;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 64%;
+            transform-origin: top center;
+            transform-style: preserve-3d;
+            transition: transform .75s cubic-bezier(.2, .75, .25, 1), z-index .1s .35s;
+        }
+
+        .envelope-flap::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+            background: #c32645;
+            backface-visibility: hidden;
+        }
+
+        .letter.open .envelope-flap {
+            z-index: 1;
+            transform: rotateX(180deg);
+        }
+
+        .wax-seal {
+            position: absolute;
+            z-index: 6;
+            top: 47%;
+            left: 50%;
+            display: grid;
+            place-items: center;
+            width: 72px;
+            height: 72px;
+            border: 5px double #f6d791;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            background: #d6a94f;
+            color: #7d1a2d;
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2rem;
+            font-weight: 900;
+            box-shadow: 0 8px 18px rgba(66, 7, 17, .3);
+            transition: opacity .25s ease, transform .35s ease;
+        }
+
+        .letter.open .wax-seal {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(.65);
+        }
+
+        .envelope-prompt {
+            position: absolute;
+            top: calc(100% + 1rem);
+            left: 0;
+            width: 100%;
+            color: var(--rose);
+            text-align: center;
+            font-weight: 800;
+        }
+
+        .envelope-prompt .close-text,
+        .letter.open .envelope-prompt .open-text { display: none; }
+
+        .letter.open .envelope-prompt .close-text { display: inline; }
+
+        .letter.open .envelope-prompt {
+            top: 0;
+            z-index: 10;
+            display: grid;
+            place-items: center;
+            height: 72px;
+            color: white;
+            font-size: .9rem;
+            text-shadow: 0 1px 2px rgba(67, 6, 17, .4);
+        }
+
+        .keepsake-book {
+            order: 1;
+            width: min(900px, calc(100% - 20px));
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(190px) scale(.9);
+            transition: max-height 1.2s ease, opacity .5s ease, transform 1s cubic-bezier(.2, .8, .2, 1), margin 1s ease;
+        }
+
+        .letter.open .keepsake-book {
+            max-height: 2600px;
+            overflow: visible;
+            opacity: 1;
+            transform: translateY(42px) scale(1);
+            margin-bottom: 3.5rem;
+        }
+
+        .keepsake-page {
+            position: relative;
+            min-height: 620px;
+            padding: clamp(1.5rem, 5vw, 4rem);
+            overflow: hidden;
+            border: 1px solid rgba(104, 56, 39, .14);
+            border-radius: 4px;
+            background-color: #fffaf0;
+            background-image: linear-gradient(rgba(122, 74, 54, .045) 1px, transparent 1px);
+            background-size: 100% 28px;
+            box-shadow: 0 28px 70px rgba(75, 25, 36, .2);
+            animation: turnPage .55s cubic-bezier(.2, .75, .25, 1) both;
+        }
+
+        .keepsake-page[hidden] { display: none; }
+
+        .keepsake-page::after {
+            content: '';
+            position: absolute;
+            inset: 12px;
+            border: 1px solid rgba(183, 43, 78, .15);
+            pointer-events: none;
+        }
+
+        .flower-page {
+            display: block;
+            min-height: 620px;
+            background: #fffaf5;
+        }
+
+        .page-copy {
+            position: relative;
+            z-index: 3;
+            grid-column: 2;
+            max-width: 440px;
+            padding: 1.5rem;
+            text-shadow: 0 1px 0 rgba(255, 255, 255, .8);
+        }
+        .page-copy h2,
+        .photo-page h2,
+        .message-page h2 {
+            margin: .6rem 0 1rem;
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: clamp(2.3rem, 6vw, 5rem);
+            line-height: 1;
+        }
+
+        .page-copy > p:last-child { color: var(--muted); font-size: 1.15rem; }
+
+        .script-line {
+            margin: 1rem 0;
+            color: var(--rose);
+            font-family: 'Playfair Display', Georgia, serif;
+            font-style: italic;
+            font-size: 1.35rem;
+        }
+
+        .flower-field {
+            position: absolute;
+            inset: .75rem;
+            z-index: 1;
+        }
+
+        .bouquet-layer {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            opacity: 0;
+            transform: translateY(45px) scale(.82);
+            filter: blur(9px) saturate(.86);
+            transform-origin: center;
+        }
+
+        .bouquet-top { clip-path: polygon(0 0, 100% 0, 100% 40%, 0 40%); }
+        .bouquet-middle { clip-path: polygon(0 40%, 100% 40%, 100% 72%, 0 72%); }
+        .bouquet-base { clip-path: polygon(0 72%, 100% 72%, 100% 100%, 0 100%); }
+
+        .letter.open .flower-page.active .bouquet-top {
+            animation: bouquetPieceBloom 1.15s .15s cubic-bezier(.16, .8, .2, 1) forwards;
+        }
+
+        .letter.open .flower-page.active .bouquet-middle {
+            animation: bouquetPieceBloom 1.15s .58s cubic-bezier(.16, .8, .2, 1) forwards;
+        }
+
+        .letter.open .flower-page.active .bouquet-base {
+            animation: bouquetPieceBloom 1.15s 1s cubic-bezier(.16, .8, .2, 1) forwards;
+        }
+
+        .bloom {
+            --angle: calc(var(--i) * 30deg);
+            --spread: 260px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 52px;
+            height: 52px;
+            opacity: 0;
+            transform: rotate(var(--angle)) translateY(calc(var(--spread) * -1)) scale(.2);
+        }
+
+        .letter.open .flower-page.active .bloom {
+            animation: flowerBloom 1.2s calc(var(--i) * 80ms + .25s) cubic-bezier(.18, .8, .25, 1) forwards;
+        }
+
+        .bloom::before,
+        .bloom::after,
+        .bloom i::before,
+        .bloom i::after {
+            content: '';
+            position: absolute;
+            top: 13px;
+            left: 13px;
+            width: 26px;
+            height: 26px;
+            border-radius: 50% 50% 50% 4px;
+            background: #e8617e;
+            transform-origin: bottom right;
+        }
+
+        .bloom::after { transform: rotate(90deg); background: #f09aab; }
+        .bloom i::before { transform: rotate(180deg); background: #d83f65; }
+        .bloom i::after { transform: rotate(270deg); background: #f2b2bd; }
+
+        .photo-page {
+            background: #f8f1e7;
+        }
+
+        .photo-page > h2 {
+            position: relative;
+            z-index: 2;
+            margin-bottom: .4rem;
+            font-size: clamp(2.2rem, 5vw, 4rem);
+        }
+
+        .board-intro {
+            position: relative;
+            z-index: 2;
+            margin: 0 0 1.4rem;
+            color: #725f55;
+        }
+
+        .memory-board {
+            position: relative;
+            z-index: 2;
+            padding: 2.5rem 2rem 1.6rem;
+            border: 10px solid #eee3d4;
+            background-color: #e8dcc9;
+            background-image:
+                repeating-linear-gradient(0deg, rgba(112, 86, 55, .09) 0, rgba(112, 86, 55, .09) 1px, transparent 1px, transparent 34px),
+                linear-gradient(90deg, rgba(255, 255, 255, .3), transparent 35%, rgba(130, 94, 57, .07));
+            box-shadow: inset 0 0 28px rgba(80, 57, 34, .12), 0 18px 38px rgba(55, 34, 25, .18);
+        }
+
+        .memory-board::before {
+            content: '';
+            position: absolute;
+            inset: 4.4rem 1.2rem 3.2rem;
+            z-index: 0;
+            background: repeating-linear-gradient(to bottom, transparent 0, transparent calc(25% - 2px), #756153 calc(25% - 1px), #756153 calc(25% + 1px), transparent calc(25% + 2px), transparent 25%);
+            opacity: .75;
+            pointer-events: none;
+        }
+
+        .heart-board::before { display: none; }
+
+        .heart-collage {
+            position: relative;
+            z-index: 1;
+            width: min(720px, 100%);
+            aspect-ratio: 1 / 1;
+            margin: 0 auto;
+        }
+
+        .heart-photo {
+            position: absolute;
+            width: 27%;
+            margin: 0;
+            padding: .55rem;
+            transform: rotate(var(--tilt));
+            background: #fffdf9;
+            box-shadow: 0 10px 20px rgba(53, 38, 29, .24);
+            transition: transform .3s ease, z-index 0s;
+        }
+
+        .heart-photo:hover {
+            z-index: 5;
+            transform: rotate(0) scale(1.06);
+        }
+
+        .heart-photo img {
+            display: block;
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+        }
+
+        .heart-photo.photo-needs-rotation img {
+            transform: rotate(-90deg);
+        }
+
+        .heart-photo-1 { top: 1%; left: 17%; }
+        .heart-photo-2 { top: 1%; left: 56%; }
+        .heart-photo-3 { top: 22%; left: 1%; }
+        .heart-photo-4 { top: 22%; left: 72%; }
+        .heart-photo-5 { top: 45%; left: 18%; }
+        .heart-photo-6 { top: 45%; left: 55%; }
+        .heart-photo-7 { top: 69%; left: 36.5%; }
+
+        .paper-photos {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem 1.35rem;
+        }
+
+        .paper-photos figure {
+            position: relative;
+            margin: 0;
+            padding: .55rem;
+            transform: rotate(var(--tilt));
+            background: #fffdf9;
+            box-shadow: 0 8px 14px rgba(53, 38, 29, .22);
+        }
+
+        .paper-photos img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; }
+
+        .paper-photos figcaption {
+            padding-top: .55rem;
+            color: #432f2b;
+            font-family: 'Segoe Print', 'Bradley Hand', cursive;
+            font-size: clamp(.72rem, 1.7vw, 1rem);
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .wooden-clip {
+            position: absolute;
+            z-index: 3;
+            top: -13px;
+            left: 50%;
+            width: 12px;
+            height: 30px;
+            border-radius: 2px;
+            transform: translateX(-50%) rotate(2deg);
+            background: linear-gradient(90deg, #b8874b, #dfb875 48%, #9b6c35);
+            box-shadow: 1px 2px 3px rgba(52, 34, 18, .28);
+        }
+
+        .wooden-clip::after {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 1px;
+            width: 10px;
+            height: 2px;
+            background: rgba(83, 51, 24, .35);
+        }
+
+        .board-names {
+            position: relative;
+            z-index: 2;
+            margin-top: 1.5rem;
+            color: #3d2926;
+            font-family: 'Segoe Print', 'Bradley Hand', cursive;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .board-message {
+            position: relative;
+            z-index: 2;
+            max-width: 620px;
+            margin: .65rem auto 0;
+            color: #654d47;
+            font-family: 'Segoe Print', 'Bradley Hand', cursive;
+            font-size: clamp(.82rem, 1.8vw, 1rem);
+            line-height: 1.65;
+            text-align: center;
+        }
+
+        .message-page { padding-bottom: 3rem; }
+        .letter-copy { position: relative; z-index: 2; columns: 2; column-gap: 2.5rem; }
+        .letter-copy p { margin: 0 0 1rem; break-inside: avoid; color: #5d4351; line-height: 1.75; }
+        .signature { font-family: 'Playfair Display', Georgia, serif; font-size: 1.15rem; }
+
+        .mini-promises {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: .65rem;
+            margin-top: 1.4rem;
+        }
+
+        .mini-promises span { padding: .8rem; background: #f7dde2; color: #81233a; font-weight: 800; text-align: center; }
+
+        .secret-paper {
+            position: relative;
+            z-index: 2;
+            display: block;
+            margin: 1.25rem auto 0;
+            border: 0;
+            border-bottom: 2px solid var(--rose);
+            background: transparent;
+            color: var(--rose);
+            cursor: pointer;
+            font-weight: 900;
+        }
+
+        .message-page .secret-message { position: relative; z-index: 2; text-align: center; }
+
+        .page-controls {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            gap: 1rem;
+            padding-top: 1rem;
+        }
+
+        .page-button {
+            display: inline-flex;
+            align-items: center;
+            gap: .45rem;
+            justify-self: start;
+            border: 1px solid rgba(184, 45, 91, .24);
+            border-radius: 999px;
+            padding: .75rem 1.15rem;
+            background: white;
+            color: var(--rose);
+            cursor: pointer;
+            font-weight: 900;
+        }
+
+        .page-button.primary { justify-self: end; border-color: var(--rose); background: var(--rose); color: white; }
+        .page-button:disabled { visibility: hidden; }
+        .page-dots { display: flex; gap: .45rem; }
+        .page-dots span { width: 9px; height: 9px; border-radius: 50%; background: #dbbdc4; }
+        .page-dots span.active { background: var(--rose); transform: scale(1.3); }
+
+        .button svg,
+        .page-button svg,
+        .secret-paper svg { width: 18px; height: 18px; stroke-width: 2.4; }
+        .music-toggle svg { width: 21px; height: 21px; }
+        .secret-paper { display: flex; align-items: center; gap: .45rem; }
+
+        @keyframes turnPage {
+            from { opacity: 0; transform: translateX(35px) rotateY(-6deg); }
+            to { opacity: 1; transform: translateX(0) rotateY(0); }
+        }
+
+        @keyframes flowerBloom {
+            to { opacity: .88; transform: rotate(var(--angle)) translateY(calc(var(--spread) * -1)) scale(1); }
+        }
+
+        @keyframes realisticFlowerBloom {
+            0% { opacity: 0; transform: scale(.72) rotate(-2deg); filter: blur(8px) saturate(.9); }
+            65% { opacity: 1; transform: scale(1.035) rotate(.4deg); filter: blur(0) saturate(1.05); }
+            100% { opacity: 1; transform: scale(1) rotate(0); filter: blur(0) saturate(1); }
+        }
+
+        @keyframes bouquetPieceBloom {
+            0% { opacity: 0; transform: translateY(45px) scale(.82); filter: blur(9px) saturate(.86); }
+            70% { opacity: 1; transform: translateY(-4px) scale(1.025); filter: blur(0) saturate(1.05); }
+            100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0) saturate(1); }
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .gallery figure {
+            margin: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 14px 34px rgba(51, 31, 42, .12);
+            aspect-ratio: 1;
+        }
+
+        .gallery img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform .45s ease;
+        }
+
+        .gallery figure:hover img { transform: scale(1.06); }
+
+        .memories {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .memory {
+            background: rgba(255, 255, 255, .72);
+            border: 1px solid rgba(184, 45, 91, .12);
+            padding: 1.35rem;
+        }
+
+        .memory span {
+            display: inline-grid;
+            place-items: center;
+            width: 2.4rem;
+            height: 2.4rem;
+            border-radius: 50%;
+            background: var(--petal);
+            color: var(--rose);
+            font-weight: 900;
+        }
+
+        .memory h3 { margin: 1rem 0 .45rem; font-size: 1.15rem; }
+        .memory p { margin: 0; color: var(--muted); line-height: 1.7; }
+
+        .promises {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .promise {
+            background: var(--ink);
+            color: white;
+            padding: 1.2rem;
+            min-height: 150px;
+            display: flex;
+            align-items: end;
+            font-weight: 800;
+            line-height: 1.35;
+        }
+
+        .promise:nth-child(2) { background: var(--rose); }
+        .promise:nth-child(3) { background: #4d8a7a; }
+        .promise:nth-child(4) { background: var(--gold); color: #27170a; }
+
+        .secret-box {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 1rem;
+            align-items: center;
+            background: rgba(255, 255, 255, .82);
+            padding: 1.5rem;
+            border: 1px solid rgba(184, 45, 91, .12);
+        }
+
+        .secret-box p { margin: .4rem 0 0; color: var(--muted); line-height: 1.7; }
+        .secret-message { display: none; margin-top: 1rem; font-weight: 800; color: var(--rose); }
+        .secret-message.show { display: block; }
+
+        .pop-heart {
+            position: fixed;
+            pointer-events: none;
+            color: var(--rose);
+            animation: floatUp 1.2s ease forwards;
+            font-size: 1.3rem;
+            z-index: 10;
+        }
+
+        @keyframes floatUp {
+            to { transform: translateY(-90px) scale(1.8); opacity: 0; }
+        }
+
+        @keyframes angryPop {
+            0% { opacity: 0; transform: translateX(-50%) translateY(.7rem) scale(.92); }
+            15% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1.03); }
+            75% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateX(-50%) translateY(-.45rem) scale(.97); }
+        }
+
+        @keyframes tinyShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-7px); }
+            50% { transform: translateX(7px); }
+            75% { transform: translateX(-4px); }
+        }
+
+        @keyframes spinCd {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 900px) {
+            .hero {
+                grid-template-columns: 1fr;
+                min-height: auto;
+                gap: 1.5rem;
+            }
+
+            .hero { padding-top: 2rem; }
+            .photo-stack { min-height: 520px; }
+            .memories,
+            .promises { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 640px) {
+            .hero,
+            section { width: min(100% - 28px, 1080px); }
+
+            .photo-stack { min-height: 420px; }
+            .photo.main { inset: 2rem .5rem 4rem 2rem; }
+            .floating-note { width: 76%; right: .4rem; }
+            .gallery { grid-template-columns: 1fr 1fr; }
+            .memories,
+            .promises,
+            .secret-box { grid-template-columns: 1fr; }
+            .letter { padding-top: 5rem; }
+            .envelope-wrap { height: 230px; }
+            .wax-seal { width: 58px; height: 58px; font-size: 1.5rem; }
+            .letter.open .message { transform: translateY(32px); }
+            .letter.open .keepsake-book { transform: translateY(32px); }
+            .keepsake-page { min-height: 560px; padding: 1.4rem; }
+            .flower-page { min-height: 560px; }
+            .bloom { --spread: 190px; }
+            .flower-page { min-height: 640px; }
+            .flower-page .flower-field { inset: .4rem; }
+            .paper-photos { grid-template-columns: 1fr 1fr; gap: .8rem; }
+            .paper-photos figure { padding: .45rem; }
+            .paper-photos figcaption { font-size: .82rem; }
+            .memory-board { padding: 2rem .8rem 1.2rem; border-width: 6px; }
+            .memory-board::before { inset: 3.5rem .4rem 3rem; }
+            .heart-photo { width: 29%; padding: .35rem; }
+            .heart-photo-1 { left: 15%; }
+            .heart-photo-2 { left: 56%; }
+            .heart-photo-3 { left: 0; }
+            .heart-photo-4 { left: 71%; }
+            .heart-photo-5 { left: 16%; }
+            .heart-photo-6 { left: 55%; }
+            .heart-photo-7 { left: 35.5%; }
+            .wooden-clip { width: 10px; height: 24px; top: -10px; }
+            .letter-copy { columns: 1; }
+            .mini-promises { grid-template-columns: 1fr; }
+            .page-controls { grid-template-columns: 1fr auto 1fr; }
+        }
+
+        @media (max-width: 480px) {
+            .passcode-screen { padding: .8rem; align-items: start; }
+            .passcode-card { margin: .5rem 0; padding: 1rem; outline-width: 3px; outline-offset: 3px; }
+            .passcode-card h2 { font-size: 2rem; }
+            .passcode-card p { font-size: .9rem; }
+            .passcode-dots { gap: .42rem; margin: 1rem 0; }
+            .passcode-dots span { width: .76rem; height: .76rem; }
+            .keypad { gap: .45rem; }
+            .keypad button { min-height: 3rem; }
+
+            .hero,
+            section { width: calc(100% - 20px); }
+
+            .hero { padding-top: 1.25rem; }
+            h1 { font-size: 2.8rem; line-height: .98; }
+            .hero-actions { display: grid; grid-template-columns: 1fr 1fr; gap: .55rem; }
+            .hero-actions .button { width: 100%; min-width: 0; padding: .8rem .65rem; font-size: .88rem; }
+
+            .music-player { width: 100%; gap: .65rem; padding: .7rem; }
+            .cd { width: 3.2rem; height: 3.2rem; }
+            .track-info strong { font-size: .9rem; }
+            .track-info span { font-size: .8rem; }
+            .music-toggle { width: 2.65rem; height: 2.65rem; }
+
+            .photo-stack { min-height: 350px; }
+            .photo.main { inset: 1.5rem .3rem 3.5rem 1.4rem; }
+            .photo.small-a { width: 46%; height: 34%; }
+            .floating-note { padding: .75rem; font-size: .82rem; }
+
+            section { padding: 3rem 0; }
+            .letter { padding-top: 3.5rem; }
+            body.envelope-mode .letter { padding-top: .6rem; }
+            .envelope-wrap { width: calc(100% - 18px); height: 205px; }
+            .letter.open .envelope-wrap { width: calc(100% - 30px); height: 64px; }
+            .letter.open .envelope-prompt { height: 64px; font-size: .8rem; }
+
+            .keepsake-book { width: 100%; }
+            .letter.open .keepsake-book { transform: translateY(22px); margin-bottom: 2.5rem; }
+            .keepsake-page { min-height: 0; padding: 1rem; }
+            .flower-page { min-height: 570px; }
+            .photo-page > h2,
+            .message-page h2 { font-size: 2.15rem; }
+            .board-intro { font-size: .9rem; line-height: 1.5; }
+            .memory-board { padding: 1.4rem .45rem .9rem; border-width: 4px; }
+            .heart-collage { width: 100%; aspect-ratio: 1 / 1.08; }
+            .heart-photo { padding: .28rem; }
+            .wooden-clip { width: 8px; height: 19px; top: -8px; }
+            .board-names { margin-top: .8rem; font-size: 1.3rem; }
+            .board-message { font-size: .76rem; line-height: 1.5; }
+
+            .letter-copy { font-size: .94rem; }
+            .mini-promises span { padding: .65rem; font-size: .85rem; }
+            .page-controls { gap: .5rem; }
+            .page-button { padding: .68rem .78rem; font-size: .82rem; }
+            .page-dots { gap: .3rem; }
+            .page-dots span { width: 7px; height: 7px; }
+
+        }
+
+        @media (max-width: 350px) {
+            h1 { font-size: 2.45rem; }
+            .hero-actions { grid-template-columns: 1fr; }
+            .passcode-card { padding: .8rem; }
+            .keypad button { min-height: 2.75rem; }
+            .photo-stack { min-height: 315px; }
+            .flower-page { min-height: 500px; }
+            .page-button { padding-inline: .6rem; }
+        }
+
+        @media (max-height: 560px) and (orientation: landscape) {
+            .passcode-screen { place-items: start center; }
+            .passcode-card { max-width: 560px; }
+            .keypad { grid-template-columns: repeat(6, 1fr); }
+            .keypad button { min-height: 2.7rem; }
+            .passcode-card p { display: none; }
+            .passcode-dots { margin: .7rem 0; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            *, *::before, *::after {
+                animation-duration: .01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: .01ms !important;
+            }
+        }
+    </style>
+</head>
+<body class="locked">
+    <div class="passcode-screen" id="passcodeScreen" aria-label="Anniversary passcode screen">
+        <div class="passcode-card" id="passcodeCard">
+            <div class="angry-cute" id="angryCute" aria-hidden="true">
+                <span class="angry-face">&gt;:&lt;</span>
+                <strong>Nooo, wrong code. Try again, love.</strong>
+            </div>
+            <div class="eyebrow"><span class="heart-dot"></span>For your eyes only</div>
+            <h2>Enter Our Code</h2>
+            <p>Six little numbers before the surprise opens.</p>
+            <div class="passcode-dots" id="passcodeDots" aria-label="Passcode progress">
+                <span></span><span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <div class="keypad" aria-label="Number keypad">
+                <button type="button" data-key="1">1</button>
+                <button type="button" data-key="2">2</button>
+                <button type="button" data-key="3">3</button>
+                <button type="button" data-key="4">4</button>
+                <button type="button" data-key="5">5</button>
+                <button type="button" data-key="6">6</button>
+                <button type="button" data-key="7">7</button>
+                <button type="button" data-key="8">8</button>
+                <button type="button" data-key="9">9</button>
+                <button type="button" class="soft-key" data-clear="true">Clear</button>
+                <button type="button" data-key="0">0</button>
+                <button type="button" class="soft-key" data-delete="true">Delete</button>
+            </div>
+            <div class="passcode-error" id="passcodeError" role="status" aria-live="polite"></div>
+        </div>
+    </div>
+
+    <main class="page">
+        <section class="hero" aria-label="Anniversary hero">
+            <div>
+                <div class="eyebrow"><span class="heart-dot"></span>Our 7th Anniversary with you</div>
+                <h1>Happy Anniversary, Mahal</h1>
+                <div class="hero-actions">
+                    <button class="button primary" data-scroll="#letter"><i data-lucide="mail-open"></i> Read my letter</button>
+                    <button class="button secondary" id="heartButton"><i data-lucide="heart"></i> Send a heart</button>
+                </div>
+                <div class="music-player" id="musicPlayer" aria-label="Music player">
+                    <div class="cd" aria-hidden="true"></div>
+                    <div class="track-info">
+                        <strong>Beautiful in White</strong>
+                        <span>Shane Filan</span>
+                        <small class="music-note" id="musicNote">Add the song file in public/music to play it here.</small>
+                    </div>
+                    <button class="music-toggle" id="musicToggle" type="button" aria-label="Play or pause music"><i data-lucide="pause"></i></button>
+                </div>
+            </div>
+
+            <div class="photo-stack" aria-label="Photo collage">
+                <div class="photo main"><img src="./images/hero-main-photo.jpg" alt="A romantic couple holding hands"></div>
+                <div class="photo small-a"><img src="./images/hero-memory-photo.jpg" alt="A sweet couple moment"></div>
+                <div class="floating-note">Every year with you becomes another chapter I never want to stop rereading.</div>
+            </div>
+        </section>
+
+        <section id="letter" class="letter" aria-label="Long sweet message">
+            <div class="envelope-wrap" id="envelopeButton" role="button" tabindex="0" aria-expanded="false" aria-controls="keepsakeBook">
+                <div class="envelope" aria-hidden="true">
+                    <div class="envelope-back"></div>
+                    <div class="envelope-flap"></div>
+                    <div class="envelope-front"></div>
+                    <div class="wax-seal">M</div>
+                </div>
+                <div class="envelope-prompt">
+                    <span class="open-text">Tap the envelope to open my letter</span>
+                    <span class="close-text">Tap again to close my letter</span>
+                </div>
+            </div>
+            <div class="keepsake-book" id="keepsakeBook" aria-hidden="true">
+                <article class="keepsake-page flower-page active" data-page="0">
+                    <div class="flower-field" aria-hidden="true">
+                        <img class="bouquet-layer bouquet-top" src="./images/original-red-rose-bouquet-transparent.png" alt="">
+                        <img class="bouquet-layer bouquet-middle" src="./images/original-red-rose-bouquet-transparent.png" alt="">
+                        <img class="bouquet-layer bouquet-base" src="./images/original-red-rose-bouquet-transparent.png" alt="">
+                    </div>
+                </article>
+
+                <article class="keepsake-page photo-page" data-page="1" hidden>
+                    <h2>Seven Years of Us</h2>
+                    <p class="board-intro">Seven years of love, laughter, growth, and beautiful memories together.</p>
+                    <div class="memory-board heart-board">
+                        <div class="heart-collage" aria-label="Seven-photo heart collage">
+                                                        <figure class="heart-photo heart-photo-1 " style="--tilt: -3deg">
+                                <span class="wooden-clip" aria-hidden="true"></span>
+                                <img src="./images/memories/memory-01.jpg" alt="A special memory from our seven years together">
+                            </figure>
+                                                        <figure class="heart-photo heart-photo-2 " style="--tilt: 3deg">
+                                <span class="wooden-clip" aria-hidden="true"></span>
+                                <img src="./images/memories/memory-02.jpg" alt="A special memory from our seven years together">
+                            </figure>
+                                                        <figure class="heart-photo heart-photo-3 " style="--tilt: -3deg">
+                                <span class="wooden-clip" aria-hidden="true"></span>
+                                <img src="./images/memories/memory-03.jpg" alt="A special memory from our seven years together">
+                            </figure>
+                                                        <figure class="heart-photo heart-photo-4 photo-needs-rotation" style="--tilt: 3deg">
+                                <span class="wooden-clip" aria-hidden="true"></span>
+                                <img src="./images/memories/memory-04.jpg" alt="A special memory from our seven years together">
+                            </figure>
+                                                        <figure class="heart-photo heart-photo-5 photo-needs-rotation" style="--tilt: -3deg">
+                                <span class="wooden-clip" aria-hidden="true"></span>
+                                <img src="./images/memories/memory-05.jpg" alt="A special memory from our seven years together">
+                            </figure>
+                                                        <figure class="heart-photo heart-photo-6 " style="--tilt: 3deg">
+                                <span class="wooden-clip" aria-hidden="true"></span>
+                                <img src="./images/memories/memory-06.jpg" alt="A special memory from our seven years together">
+                            </figure>
+                                                        <figure class="heart-photo heart-photo-7 " style="--tilt: -3deg">
+                                <span class="wooden-clip" aria-hidden="true"></span>
+                                <img src="./images/memories/memory-07.jpg" alt="A special memory from our seven years together">
+                            </figure>
+                                                    </div>
+                        <div class="board-names">You &amp; Me Through the Years</div>
+                        <p class="board-message">A few little moments from the years that brought us closer, made us stronger, and gave me even more reasons to love you.</p>
+                    </div>
+                </article>
+
+                <article class="keepsake-page message-page" data-page="2" hidden>
+                    <h2>My Letter To You</h2>
+                    <div class="letter-copy">
+                        <p><strong>Hi, Mahal. Happy 7th Anniversary!</strong></p>
+                        <p>I wanna start this message by thanking you for everything: for always staying by my side when everything gets rough, for always supporting me in anything and everything I want, and for being here for me even though I feel like I have nothing to give you.</p>
+                        <p>I wanna thank you for staying even after seeing all my flaws. I'm thankful kasi you're not the kind of girl na kapag walang napapala sa lalaki, iniiwan na nila yung partner nila, or kaya naman kinakahiya nila. You never made me feel like I was nothing just because I don't have everything. Instead, you stayed, supported me, and believed in me.</p>
+                        <p>Thank you kasi never mong pinaramdam sa akin na kailangan kong maging perfect para mahalin mo. You accepted me kahit na madalas hindi ko nabibigay yung mga bagay na gusto mo or deserve mo. Alam ko rin na may mga times na mahirap akong intindihin, nagkakamali ako, and minsan hindi ko napapakita sa'yo how much I appreciate everything you do.</p>
+                        <p>Seven years is not a short amount of time. Ang dami na nating pinagdaanan: good days, bad days, misunderstandings, and tampuhan. But after everything, we still choose each other, and that's something I'll always be grateful for.</p>
+                        <p>Thank you for believing in me even during the times when I don't believe in myself, for understanding me, for listening to me, and for reminding me that I don't have to face everything alone.</p>
+                        <p>I love you so much, Mahal, and I hope this is just one of the many more anniversaries we'll celebrate together. Soon, makakabawi rin ako for everything you've done for me. I will make you even more proud of me. Antay ka lang, one year na lang. HAHAHA!</p>
+                    </div>
+                    <div class="mini-promises">
+                        <span>I will keep choosing us.</span>
+                        <span>I will be gentle with your heart.</span>
+                        <span>I will love you in little ways, every day.</span>
+                    </div>
+                    <button class="secret-paper" id="secretButton" type="button"><i data-lucide="heart-handshake"></i> Open when you miss me</button>
+                    <p class="secret-message" id="secretMessage">I am right here in your corner, loving you loudly in my heart. You are my favorite hello and my hardest goodbye.</p>
+                </article>
+
+                <nav class="page-controls" aria-label="Keepsake pages">
+                    <button class="page-button" id="prevPage" type="button" aria-label="Previous page"><i data-lucide="arrow-left"></i> Back</button>
+                    <div class="page-dots" aria-label="Page 1 of 3">
+                        <span class="active"></span><span></span><span></span>
+                    </div>
+                    <button class="page-button primary" id="nextPage" type="button">Next <i data-lucide="arrow-right"></i></button>
+                </nav>
+            </div>
+        </section>
+    </main>
+
+    <audio id="loveSong" preload="auto" loop>
+        <source src="./music/beautiful-in-white.mp3" type="audio/mpeg">
+    </audio>
+
+    <script src="./vendor/lucide.min.js"></script>
+    <script src="./vendor/confetti.browser.min.js"></script>
+    <script>
+        const correctPasscode = '081719';
+        let enteredPasscode = '';
+        const passcodeScreen = document.getElementById('passcodeScreen');
+        const passcodeCard = document.getElementById('passcodeCard');
+        const passcodeDots = Array.from(document.querySelectorAll('#passcodeDots span'));
+        const passcodeError = document.getElementById('passcodeError');
+        const angryCute = document.getElementById('angryCute');
+        const loveSong = document.getElementById('loveSong');
+        const musicPlayer = document.getElementById('musicPlayer');
+        const musicToggle = document.getElementById('musicToggle');
+        const musicNote = document.getElementById('musicNote');
+        const letterSection = document.getElementById('letter');
+        const envelopeButton = document.getElementById('envelopeButton');
+        const keepsakeBook = document.getElementById('keepsakeBook');
+        const keepsakePages = Array.from(document.querySelectorAll('.keepsake-page'));
+        const pageDots = Array.from(document.querySelectorAll('.page-dots span'));
+        const prevPage = document.getElementById('prevPage');
+        const nextPage = document.getElementById('nextPage');
+        let currentPage = 0;
+
+        function toggleEnvelope(forceOpen) {
+            const wasOpen = letterSection.classList.contains('open');
+            const shouldOpen = typeof forceOpen === 'boolean'
+                ? forceOpen
+                : !wasOpen;
+
+            letterSection.classList.toggle('open', shouldOpen);
+            document.body.classList.toggle('envelope-mode', shouldOpen);
+            envelopeButton.setAttribute('aria-expanded', String(shouldOpen));
+            keepsakeBook.setAttribute('aria-hidden', String(!shouldOpen));
+
+            setTimeout(() => {
+                (shouldOpen ? letterSection : document.querySelector('.hero')).scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start',
+                });
+            }, shouldOpen ? 420 : 180);
+
+            if (shouldOpen && !wasOpen && typeof window.confetti === 'function') {
+                window.confetti({
+                    particleCount: 54,
+                    spread: 75,
+                    startVelocity: 28,
+                    gravity: .65,
+                    scalar: .8,
+                    origin: { x: .5, y: .7 },
+                    colors: ['#b82d5b', '#e8617e', '#f2b2bd', '#d6a94f', '#fff5ef'],
+                });
+            }
+        }
+
+        function showKeepsakePage(pageIndex) {
+            currentPage = Math.max(0, Math.min(pageIndex, keepsakePages.length - 1));
+
+            keepsakePages.forEach((page, index) => {
+                const isActive = index === currentPage;
+                page.hidden = !isActive;
+                page.classList.toggle('active', isActive);
+                pageDots[index].classList.toggle('active', isActive);
+            });
+
+            prevPage.disabled = currentPage === 0;
+            nextPage.innerHTML = currentPage === keepsakePages.length - 1
+                ? '<i data-lucide="rotate-ccw"></i> Back to start'
+                : 'Next <i data-lucide="arrow-right"></i>';
+            document.querySelector('.page-dots').setAttribute('aria-label', `Page ${currentPage + 1} of ${keepsakePages.length}`);
+            window.lucide?.createIcons();
+        }
+
+        function updatePasscodeDots() {
+            passcodeDots.forEach((dot, index) => {
+                dot.classList.toggle('filled', index < enteredPasscode.length);
+            });
+        }
+
+        function unlockAnniversary() {
+            passcodeScreen.classList.add('unlocked');
+            document.body.classList.remove('locked');
+            musicPlayer.classList.add('visible');
+            playLoveSong();
+        }
+
+        function setMusicPlaying(isPlaying) {
+            musicPlayer.classList.toggle('playing', isPlaying);
+            musicToggle.innerHTML = isPlaying ? '<i data-lucide="pause"></i>' : '<i data-lucide="play"></i>';
+            musicToggle.setAttribute('aria-label', isPlaying ? 'Pause music' : 'Play music');
+            window.lucide?.createIcons();
+        }
+
+        function playLoveSong() {
+            loveSong.play()
+                .then(() => {
+                    musicNote.classList.remove('show');
+                    setMusicPlaying(true);
+                })
+                .catch(() => {
+                    musicNote.classList.add('show');
+                    setMusicPlaying(false);
+                });
+        }
+
+        function checkPasscode() {
+            if (enteredPasscode === correctPasscode) {
+                passcodeError.textContent = 'Unlocked, my love.';
+                setTimeout(unlockAnniversary, 300);
+                return;
+            }
+
+            passcodeError.textContent = 'Almost, love. Try our special date.';
+            angryCute.classList.remove('show');
+            passcodeCard.classList.remove('shake');
+            void angryCute.offsetWidth;
+            angryCute.classList.add('show');
+            passcodeCard.classList.add('shake');
+            setTimeout(() => {
+                angryCute.classList.remove('show');
+                passcodeCard.classList.remove('shake');
+            }, 1500);
+            enteredPasscode = '';
+            updatePasscodeDots();
+        }
+
+        document.querySelectorAll('.keypad button').forEach((button) => {
+            button.addEventListener('click', () => {
+                if (button.dataset.clear) {
+                    enteredPasscode = '';
+                    passcodeError.textContent = '';
+                } else if (button.dataset.delete) {
+                    enteredPasscode = enteredPasscode.slice(0, -1);
+                    passcodeError.textContent = '';
+                } else if (enteredPasscode.length < 6) {
+                    enteredPasscode += button.dataset.key;
+                    passcodeError.textContent = '';
+                }
+
+                updatePasscodeDots();
+
+                if (enteredPasscode.length === 6) {
+                    checkPasscode();
+                }
+            });
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (!document.body.classList.contains('locked')) {
+                return;
+            }
+
+            if (/^[0-9]$/.test(event.key) && enteredPasscode.length < 6) {
+                enteredPasscode += event.key;
+                passcodeError.textContent = '';
+            } else if (event.key === 'Backspace') {
+                enteredPasscode = enteredPasscode.slice(0, -1);
+                passcodeError.textContent = '';
+            }
+
+            updatePasscodeDots();
+
+            if (enteredPasscode.length === 6) {
+                checkPasscode();
+            }
+        });
+
+        musicToggle.addEventListener('click', () => {
+            if (loveSong.paused) {
+                playLoveSong();
+            } else {
+                loveSong.pause();
+                setMusicPlaying(false);
+            }
+        });
+
+        document.querySelectorAll('[data-scroll]').forEach((button) => {
+            button.addEventListener('click', () => {
+                if (button.dataset.scroll === '#letter') {
+                    toggleEnvelope(true);
+                    return;
+                }
+                document.querySelector(button.dataset.scroll).scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        envelopeButton.addEventListener('click', () => toggleEnvelope());
+        envelopeButton.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                toggleEnvelope();
+            }
+        });
+
+        prevPage.addEventListener('click', () => showKeepsakePage(currentPage - 1));
+        nextPage.addEventListener('click', () => {
+            showKeepsakePage(currentPage === keepsakePages.length - 1 ? 0 : currentPage + 1);
+            keepsakeBook.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+
+        showKeepsakePage(0);
+        window.lucide?.createIcons();
+
+        document.getElementById('secretButton').addEventListener('click', () => {
+            document.getElementById('secretMessage').classList.toggle('show');
+        });
+
+        document.getElementById('heartButton').addEventListener('click', (event) => {
+            for (let i = 0; i < 9; i += 1) {
+                const heart = document.createElement('span');
+                heart.className = 'pop-heart';
+                heart.textContent = '♥';
+                heart.style.left = `${event.clientX + Math.random() * 80 - 40}px`;
+                heart.style.top = `${event.clientY + Math.random() * 30 - 15}px`;
+                heart.style.animationDelay = `${i * 45}ms`;
+                document.body.appendChild(heart);
+                setTimeout(() => heart.remove(), 1400);
+            }
+        });
+    </script>
+</body>
+</html>
